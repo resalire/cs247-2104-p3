@@ -9,7 +9,7 @@ var bodyParser = require('body-parser');
 
 // Declare your route variables here.
 var index = require('./routes/index');
-var login = require('./routes/login');
+var chat = require('./routes/chat');
 var app = express();
 
 // enable sockiet io support
@@ -39,7 +39,7 @@ app.use(app.router);
 
 // Declare your routes here
 app.get('/', index.index);
-app.get('/login', login.login);
+app.get('/chat', chat.chat);
 
 /// catch 404 and forwarding to error handler
 app.use(function(req, res, next) {
