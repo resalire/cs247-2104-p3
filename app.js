@@ -8,7 +8,8 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 // Declare your route variables here.
-var routes = require('./routes');
+var index = require('./routes/index');
+var login = require('./routes/login');
 var app = express();
 
 // enable sockiet io support
@@ -21,7 +22,6 @@ server.listen(process.env.PORT || 3000);
 if (app.get('env') === 'development') {
     console.log("Now listening on port 3000");
 }
-
 
 // view engine setup
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
@@ -38,7 +38,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(app.router);
 
 // Declare your routes here
-app.get('/', routes.index);
+app.get('/', index.index);
+app.get('/login', login.login);
 
 /// catch 404 and forwarding to error handler
 app.use(function(req, res, next) {
