@@ -1,15 +1,17 @@
 <!doctype html>
   <div id="waiting">Connecting to chat server...</div>
   <div id="conversation">
+    <div id="inbound_video_box"></div>
     <div id="submission">
       <input type="text" placeholder="say something..">
     </div>
   </div>
-  <div id="video_panel">
+  <div id="outbound_video_panel">
     <h1 id="video_panel_header"> Emoticon Video Editor </h1>
     <div id="second_counter"></div>
     <div id="webcam_stream"></div>
     <div id="video_container"></div>
+    <div id="message_preview"></div>
   </div>
     
   <script> var username = "{{username}}"; </script>

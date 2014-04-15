@@ -5,6 +5,8 @@
 
   var cur_video_blob = null;
   var fb_instance;
+  var fb_instance_stream;
+  var my_color;
   var local_stream;
 
   $(document).ready(function(){
@@ -30,8 +32,8 @@
     // set up variables to access firebase data structure
     var fb_new_chat_room = fb_instance.child('chatrooms').child(fb_chat_room_id);
     var fb_instance_users = fb_new_chat_room.child('users');
-    var fb_instance_stream = fb_new_chat_room.child('stream');
-    var my_color = "#"+((1<<24)*Math.random()|0).toString(16);
+    fb_instance_stream = fb_new_chat_room.child('stream');
+    my_color = "#"+((1<<24)*Math.random()|0).toString(16);
 
     // listen to events
     fb_instance_users.on("child_added",function(snapshot){
@@ -53,9 +55,7 @@
     $("#submission input").keydown(function( event ) {
       if (event.which == 13) {
         if(has_emotions($(this).val())){
-          record_emotion();
-          console.log(cur_video_blob);
-          fb_instance_stream.push({m:username+": " +$(this).val(), v:cur_video_blob, c: my_color});
+          record_emotion($(this).val());
         }else{
           fb_instance_stream.push({m:username+": " +$(this).val(), c: my_color});
         }
@@ -68,7 +68,7 @@
     scroll_to_bottom(1300);
   }
 
-  function record_emotion() {
+  function record_emotion(message) {
     setup_webcam_stream(local_stream);
     var webcam_stream = document.getElementById('webcam_stream');
     var video = webcam_stream.firstElementChild;
@@ -95,37 +95,42 @@
     //mediaRecorder.video_height = video_height/2;
 
     mediaRecorder.ondataavailable = function (blob) {
-        console.log("new data available!");
         video_container.innerHTML = "";
 
         // convert data into base 64 blocks
         blob_to_base64(blob,function(b64_data){
-          console.log('setting blob');
+          console.log('converting cur_video_blob');
           cur_video_blob = b64_data;
-          console.log(cur_video_blob);
+          fb_instance_stream.push({m:username+": " + message, v:cur_video_blob, c:my_color});
+          $("#message_preview").text("");
         });
+
+        
     };
     //console.log("connect to media stream!");
-    mediaRecorder.start(3000);
     mediaRecorder.stop();
+    mediaRecorder.start(3000);
+
+    $("#message_preview").text(message);
   }
 
   // creates a message node and appends it to the conversation
   function display_msg(data){
     $("#conversation").append("<div class='msg' style='color:"+data.c+"'>"+data.m+"</div>");
     if(data.v){
-      // for video element
+        // for video element
       var video = document.createElement("video");
-      video.autoplay = true;
-      video.controls = false; // optional
-      video.loop = true;
-      video.width = 120;
+      video.autoplay = false;
+      video.controls = true; // optional
+      video.loop = false;
+      video.width = 80;
 
       var source = document.createElement("source");
       source.src =  URL.createObjectURL(base64_to_blob(data.v));
       source.type =  "video/webm";
 
       video.appendChild(source);
+      $("#inbound_video_box").appendChild(video);
 
       // for gif instead, use this code below and change mediaRecorder.mimeType in onMediaSuccess below
       // var video = document.createElement("img");
