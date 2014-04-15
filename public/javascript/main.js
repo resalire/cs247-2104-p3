@@ -62,12 +62,8 @@
           fb_instance_stream.push({m:username+": " +$(this).val(), c: my_color});
         }
         $(this).val("");
-        scroll_to_bottom(0);
       }
     });
-
-    // scroll to bottom in case there is already content
-    scroll_to_bottom(1300);
   }
 
   function record_emotion(message) {
@@ -157,6 +153,8 @@
 
       document.getElementById("conversation").hover(show_popup);
     }
+    // Scroll to the bottom every time we display a new message
+    scroll_to_bottom(0);
   }
 
   
