@@ -1,5 +1,6 @@
   <div>Welcome to {{title}}, enable camera to post video emoji!</div>
   <div id="waiting">Connecting to chat server...</div>
+  <div id="share_url"/>
   <div id="second_counter"></div>
   <div id="conversation"></div>
   <div id="submission">
@@ -8,13 +9,17 @@
   
   
 </div>
-  <div id="video_container"></div>
+  <div id="video_container"/>
 
 
 <table id="playground">
+     <tr>
+        <td class="name" id="partner">Waiting for conversation partner to join room...</td>
+        <td class="name" id="username"/>
+    </tr> 
     <tr>
-        <td class="speech_bubble">Row 1, cell 1</td>
-        <td class="speech_bubble_flip">Row 1, cell 2</td>
+        <td class="speech_bubble"><div id="msg_received"/></td>
+        <td class="speech_bubble_flip"><div id="msg_sent"/>Row 1, cell 2</td>
     </tr>
     <tr>
         <td class="talking_head">
@@ -24,12 +29,7 @@
         	<div id="webcam_stream">
     	</td>
     </tr>
-  
 </table>
-
-
-  
-
 
  
   <script> var username = "{{username}}"; </script>

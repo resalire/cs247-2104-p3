@@ -22,7 +22,10 @@
     }else{
       fb_chat_room_id = Math.random().toString(36).substring(7);
     }
-    display_msg({m:"Share this url with your friend to join this chat: "+ document.location.origin+"/#"+fb_chat_room_id,c:"red"})
+    
+    $("#share_url").append("Share this url with your friend to join this chat: "+ document.location.origin+"/#"+fb_chat_room_id);
+    //share_url({m:"Share this url with your friend to join this chat: "+ document.location.origin+"/#"+fb_chat_room_id,c:"red"})
+   display_msg({m:"Share this url with your friend to join this chat: "+ document.location.origin+"/#"+fb_chat_room_id,c:"red"})
 
     // set up variables to access firebase data structure
     var fb_new_chat_room = fb_instance.child('chatrooms').child(fb_chat_room_id);
@@ -33,9 +36,11 @@
     // listen to events
     fb_instance_users.on("child_added",function(snapshot){
       display_msg({m:snapshot.val().name+" joined the room",c: snapshot.val().c});
+       $("#partner").empty().append(snapshot.val().name);
     });
     fb_instance_stream.on("child_added",function(snapshot){
       display_msg(snapshot.val());
+       $("#msg_received").empty().append(snapshot.val());
     });
 
     // block until username is answered
@@ -45,23 +50,28 @@
     }
     fb_instance_users.push({ name: username,c: my_color});
     $("#waiting").remove();
+    $("#username").append(username);
 
     // bind submission box
     $("#submission input").keydown(function( event ) {
       if (event.which == 13) {
         if(has_emotions($(this).val())){
-          fb_instance_stream.push({m:username+": " +$(this).val(), v:cur_video_blob, c: my_color});
+          fb_instance_stream.push({m:$(this).val(), v:cur_video_blob, c: my_color});
         }else{
-          fb_instance_stream.push({m:username+": " +$(this).val(), c: my_color});
+          fb_instance_stream.push({m:$(this).val(), c: my_color});
         }
         $(this).val("");
       }
     });
   }
 
+  function share_url(data) {
+    //$("#share_url").empty().append(data.m);
+  }
+  
   // creates a message node and appends it to the conversation
   function display_msg(data){
-    $("#conversation").append("<div class='msg' style='color:"+data.c+"'>"+data.m+"</div>");
+    $("#msg_sent").empty().append(data.m);
     if(data.v){
       // for video element
       var video = document.createElement("video");
@@ -83,7 +93,7 @@
       document.getElementById("conversation").appendChild(video);
     }
     // Scroll to the bottom every time we display a new message
-    scroll_to_bottom(0);
+    //scroll_to_bottom(0);
   }
 
   function scroll_to_bottom(wait_time){
@@ -138,7 +148,7 @@
 
       mediaRecorder.ondataavailable = function (blob) {
           //console.log("new data available!");
-          video_container.innerHTML = "";
+          //video_container.innerHTML = "";
 
           // convert data into base 64 blocks
           blob_to_base64(blob,function(b64_data){
