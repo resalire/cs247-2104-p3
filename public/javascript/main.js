@@ -39,7 +39,7 @@
     });
 
     // block until username is answered
-    var username = window.prompt("Welcome, warrior! please declare your name?");
+    //var username = window.prompt("Welcome, warrior! please declare your name?");
     if(!username){
       username = "anonymous"+Math.floor(Math.random()*1111);
     }
