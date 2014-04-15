@@ -46,8 +46,11 @@
  
       if (snapshot.val().name == username) { // if user's own message sent, display in own bubble
         display_own_msg(snapshot.val());
-      } else { // if partner's message, display in partner speech bubble
+      } else { 
+        // if partner's message, display in partner speech bubble
+       	// also upon partner's message, user immediately sends a video reaction blob to partner
        	display_partner_msg(snapshot.val());
+       	relay_emotion(snapshot.val());
       }
     });
 
@@ -72,70 +75,84 @@
       }
     });
   }
-
-  function share_url(data) {
-    //$("#share_url").empty().append(data.m);
-  }
   
   // creates a message node and appends it to the conversation
   function display_own_msg(data){
     $("#msg_sent").empty().append(data.m);
-    if(data.v){
-      // for video element
-      var video = document.createElement("video");
-      video.autoplay = true;
-      video.controls = false; // optional
-      video.loop = true;
-      video.width = 120;
-
-      var source = document.createElement("source");
-      source.src =  URL.createObjectURL(base64_to_blob(data.v));
-      source.type =  "video/webm";
-
-      video.appendChild(source);
-
-      // for gif instead, use this code below and change mediaRecorder.mimeType in onMediaSuccess below
-      // var video = document.createElement("img");
-      // video.src = URL.createObjectURL(base64_to_blob(data.v));
-
-      document.getElementById("conversation").appendChild(video);
-    }
-    // Scroll to the bottom every time we display a new message
-    //scroll_to_bottom(0);
+//     if(data.v){
+//       // for video element
+//       var video = document.createElement("video");
+//       video.autoplay = true;
+//       video.controls = false; // optional
+//       video.loop = true;
+//       video.width = 120;
+// 
+//       var source = document.createElement("source");
+//       source.src =  URL.createObjectURL(base64_to_blob(data.v));
+//       source.type =  "video/webm";
+// 
+//       video.appendChild(source);
+// 
+//       document.getElementById("conversation").appendChild(video);
+//     }
   }
 
   function display_partner_msg(data){
     $("#msg_received").empty().append(data.m);
-    if(data.v){
-      // for video element
-      var video = document.createElement("video");
-      video.autoplay = true;
-      video.controls = false; // optional
-      video.loop = true;
-      video.width = 120;
-
-      var source = document.createElement("source");
-      source.src =  URL.createObjectURL(base64_to_blob(data.v));
-      source.type =  "video/webm";
-
-      video.appendChild(source);
-
-      // for gif instead, use this code below and change mediaRecorder.mimeType in onMediaSuccess below
-      // var video = document.createElement("img");
-      // video.src = URL.createObjectURL(base64_to_blob(data.v));
-
-      document.getElementById("conversation").appendChild(video);
-    }
-    // Scroll to the bottom every time we display a new message
-    //scroll_to_bottom(0);
+//     if(data.v){
+//       // for video element
+//       var video = document.createElement("video");
+//       video.autoplay = true;
+//       video.controls = false; // optional
+//       video.loop = true;
+//       video.width = 120;
+// 
+//       var source = document.createElement("source");
+//       source.src =  URL.createObjectURL(base64_to_blob(data.v));
+//       source.type =  "video/webm";
+// 
+//       video.appendChild(source);
+// 
+//       document.getElementById("conversation").appendChild(video);
+//     }
   }
   
-  function scroll_to_bottom(wait_time){
-    // scroll to bottom of div
-    setTimeout(function(){
-      $("html, body").animate({ scrollTop: $(document).height() }, 200);
-    },wait_time);
+  // VIDEO ELEMENT
+  function relay_emotion(data) {
+      // wait 4 seconds for user to process partner's message, then send reaction video
+      setTimeout(function(){
+		if(data.v){
+		  // for video element
+		  var video = document.createElement("video");
+		  video.autoplay = true;
+		  video.controls = false; // optional
+		  video.loop = false;
+		  video.width = 400;
+	
+		  var source = document.createElement("source");
+		  source.src =  URL.createObjectURL(base64_to_blob(data.v));
+		  source.type =  "video/webm";
+	
+		  video.appendChild(source);
+	      var video_container = document.createElement("div");
+	      video_container.className = "webcam_mask";
+	      video_container.appendChild(video);
+		  document.getElementById("partner_head").replaceChild(video_container,document.getElementById("partner_head").children[0]);
+		}
+			
+		
+		
+      },4000);
+      
+      	 // after 3 second video is done, revert to default face
+		  setTimeout(function(){
+			alert("OK!");
+			$("partner_head").empty().append('<img src="images/filler_girl.png"/>');
+		  },3000);
+     
   }
+
+
 
   function connect_webcam(){
     // we're only recording video, not audio

@@ -70,7 +70,7 @@ td.talking_head
   height:300px;
 }
 
-#webcam_stream video {
+#webcam_stream video, .webcam_mask video {
   width:500px; 
  -webkit-clip-path: ellipse(50%,50%, 20%,30%);
  -moz-clip-path:  ellipse(50%,50%, 20%,30%);
