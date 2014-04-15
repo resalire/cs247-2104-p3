@@ -5,15 +5,65 @@ body {
 a {
   color: #00B7FF;
 }
+
+img {
+  width:400px; 
+ -webkit-clip-path: ellipse(50%,50%, 30%,30%);
+ -moz-clip-path:  ellipse(50%,50%, 30%,30%);
+ -ms-clip-path:  ellipse(50%,50%, 30%,30%);
+ clip-path: ellipse(50%,50%, 30%,30%);
+  }
+    
 #webcam_stream {
-  position: absolute;
-  top: 10px;
-  right: 10px;
+  display: inline;
   padding: 0;
+
 }
+
+table { 
+height:300px;
+table-layout:fixed; 
+margin: 0px auto;
+}
+
+td {
+overflow: hidden;
+    width: 100px;
+    
+}
+td.speech_bubble
+{
+  width:400px;
+  height:300px;
+  background-image:url('../images/speech_bubble.png');
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+td.speech_bubble_flip
+{
+  width:400px;
+  height:200px;
+  background-image:url('../images/speech_bubble_flip.png');
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+td.talking_head 
+{
+  margin: 0;
+  padding: 0;
+  height:300px;
+}
+
 #webcam_stream video {
-  border: 2px solid #dcc;
+  width:500px; 
+ -webkit-clip-path: ellipse(50%,50%, 20%,30%);
+ -moz-clip-path:  ellipse(50%,50%, 20%,30%);
+ -ms-clip-path:  ellipse(50%,50%, 20%,30%);
+ clip-path: ellipse(50%,50%, 20%,30%);
 }
+
 #second_counter {
   position: fixed;
   top: 20px;

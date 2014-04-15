@@ -1,5 +1,16 @@
   <div>Welcome to {{title}}! Please log in here.</div>
+   <div id="photo_preview"/>
   <form id="user-data" action="/chat" method="get">
   <label for="username"> Username: </label>
   <input type="text" name="username"></input>
+  
+  <div>Take a snapshot of yourself before entering the chatroom. Smile!</div>
+  <div id="video_container"></div>
+  <div id="webcam_stream"></div>
+  <input id="take_photo_button" type="button" value="Take Photo"/>
+ 
+  <input type="submit" value="Let's go!">
   </form>
+  
+
+  <script src='javascript/login.js'></script>
