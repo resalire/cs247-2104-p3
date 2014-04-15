@@ -3,4 +3,7 @@
   <form id="user-data" action="/chat" method="get">
   <label for="username"> Username: </label>
   <input type="text" name="username"></input>
+  {{#if chat_id}}
+    <input type="hidden" name="chat_id" value="{{chat_id}}"></input>
+  {{/if}}
   </form>

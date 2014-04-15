@@ -21,13 +21,15 @@
     display_msg({m:"Welcome to Chatterbox, enable camera to post video emoji!",c:"black"});
 
     // generate new chatroom id or use existing id
-    var url_segments = document.location.href.split("/#");
-    if(url_segments[1]){
-      fb_chat_room_id = url_segments[1];
-    }else{
-      fb_chat_room_id = Math.random().toString(36).substring(7);
+    if (!fb_chat_room_id) {
+      var url_segments = document.location.href.split("/#");
+      if(url_segments[1]){
+        fb_chat_room_id = url_segments[1];
+      }else{
+        fb_chat_room_id = Math.random().toString(36).substring(7);
+      }
     }
-    display_msg({m:"Share this url with your friend to join this chat: "+ document.location.origin+"/#"+fb_chat_room_id,c:"red"})
+    display_msg({m:"Share this url with your friend to join this chat: "+ document.location.origin+"/?chat_id="+fb_chat_room_id,c:"red"})
 
     // set up variables to access firebase data structure
     var fb_new_chat_room = fb_instance.child('chatrooms').child(fb_chat_room_id);
@@ -130,7 +132,8 @@
       source.type =  "video/webm";
 
       video.appendChild(source);
-      $("#inbound_video_box").appendChild(video);
+      video.hover(show_popup(data));
+      //$("#inbound_video_box").appendChild(video);
 
       // for gif instead, use this code below and change mediaRecorder.mimeType in onMediaSuccess below
       // var video = document.createElement("img");
@@ -138,6 +141,27 @@
 
       document.getElementById("conversation").appendChild(video);
     }
+  }
+
+  function show_popup(data) {
+    var video = document.createElement("video");
+    video.autoplay = true;
+    video.controls = false; // optional
+    video.loop = false;
+    video.width = 240;
+
+    var source = document.createElement("source");
+    source.src =  URL.createObjectURL(base64_to_blob(data.v));
+    source.type =  "video/webm";
+
+    video.appendChild(source);
+
+    var video_box = $("#conversation #inbound_video_box");
+    video_box.append(video);
+    video.autoplay = false;
+    video.controls = false; // optional
+    video.loop = false;
+    video.width = 240;
   }
 
   function scroll_to_bottom(wait_time){
