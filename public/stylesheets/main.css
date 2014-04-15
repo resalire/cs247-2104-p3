@@ -1,94 +1,104 @@
 body {
   margin: 10px;
   font: 15px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background-image: url("../images/bg.gif");
+  background-repeat: repeat;
 }
 a {
   color: #00B7FF;
 }
-
 img {
-  width:400px; 
- -webkit-clip-path: ellipse(50%,50%, 30%,30%);
- -moz-clip-path:  ellipse(50%,50%, 30%,30%);
- -ms-clip-path:  ellipse(50%,50%, 30%,30%);
- clip-path: ellipse(50%,50%, 30%,30%);
-  }
-    
+  width: 400px;
+  -webkit-clip-path: ellipse(50%, 50%, 30%, 30%);
+  -moz-clip-path: ellipse(50%, 50%, 30%, 30%);
+  -ms-clip-path: ellipse(50%, 50%, 30%, 30%);
+  clip-path: ellipse(50%, 50%, 30%, 30%);
+  clip: rect(0px, 60px, 200px, 0px);
+  margin-top: -90px;
+}
 #webcam_stream {
   display: inline;
   padding: 0;
-
 }
-
-table { 
-width: 100%;
-height: 100%;
-table-layout:fixed; 
-margin: 0px auto;
+#share_url {
+  display: inline-block;
+  color: #cc6600;
 }
-
+table {
+  width: 80%;
+  height: 70%;
+  table-layout: fixed;
+  margin: 0px auto;
+}
+#login {
+  width: 50%;
+  margin: 0 auto;
+  font-size: 30pt;
+  font-family: 'Amatic SC';
+}
+#login img {
+  margin-top: 50px;
+  display: inline-block;
+  width: 200px;
+}
 td {
   overflow: hidden;
   width: 100px;
   text-align: center;
-    
 }
-
-#msg_received, #msg_sent {
+#username,
+#partner {
+  font-size: 30pt;
+  font-family: 'Amatic SC';
+  font-weight: bold;
+  color: #CC0066;
+}
+#msg_received,
+#msg_sent {
   overflow: scroll;
-  height:280px;
-  background-color: #ff0000;
+  height: 180px;
+  background-color: #ffffff;
   text-align: center;
   margin: 60px 60px 120px 60px;
-  
+  font-size: 20pt;
+  font-family: 'Amatic SC';
 }
-
-td.speech_bubble
-{
-  width:400px;
-  height:300px;
-  padding-bottom:30px;
-  background-image:url('../images/speech_bubble.png');
+td.speech_bubble {
+  width: 380px;
+  height: 260px;
+  padding-bottom: 30px;
+  background-image: url('../images/speech_bubble.png');
   background-repeat: no-repeat;
   background-size: 100% 100%;
 }
-
-td.speech_bubble_flip
-{
-  width:400px;
-  height:300px;
-  padding-bottom:30px;
-  background-image:url('../images/speech_bubble_flip.png');
+td.speech_bubble_flip {
+  width: 400px;
+  height: 300px;
+  padding-bottom: 30px;
+  background-image: url('../images/speech_bubble_flip.png');
   background-repeat: no-repeat;
   background-size: 100% 100%;
 }
-
-td.talking_head 
-{
+td.talking_head {
   margin: 0;
   padding: 0;
-  height:300px;
+  height: 300px;
 }
-
-#webcam_stream video, .webcam_mask video {
-  width:500px; 
- -webkit-clip-path: ellipse(50%,50%, 20%,30%);
- -moz-clip-path:  ellipse(50%,50%, 20%,30%);
- -ms-clip-path:  ellipse(50%,50%, 20%,30%);
- clip-path: ellipse(50%,50%, 20%,30%);
+#webcam_stream video,
+.webcam_mask video {
+  width: 500px;
+  -webkit-clip-path: ellipse(50%, 50%, 20%, 30%);
+  -moz-clip-path: ellipse(50%, 50%, 20%, 30%);
+  -ms-clip-path: ellipse(50%, 50%, 20%, 30%);
+  clip-path: ellipse(50%, 50%, 20%, 30%);
+  margin-top: -90px;
 }
-
 #second_counter {
   position: fixed;
   top: 20px;
   right: 20px;
   color: white;
   z-index: 999;
-}
-#conversation {
-  padding: 10px 10px 80px;
-  overflow-y: scroll;
-  height: 100%;
 }
 #submission {
   position: fixed;
@@ -97,6 +107,7 @@ td.talking_head
   right: 0;
   border-top: 2px solid #dcc;
   background: #fff;
+  z-index: 1000;
 }
 #submission input {
   border: none;
@@ -105,6 +116,7 @@ td.talking_head
   outline: none;
   box-sizing: border-box;
   width: 100%;
+  z-index: 1000;
 }
 #waiting {
   position: fixed;

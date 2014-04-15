@@ -3,6 +3,19 @@
   var cur_video_blob = null;
   var fb_instance;
 
+  WebFontConfig = {
+    google: { families: [ 'Amatic+SC::latin' ] }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+  
   $(document).ready(function(){
     var hidden_elem_uri = document.getElementById('uri');
       hidden_elem_uri.innerHTML = document.location.href;

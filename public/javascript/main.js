@@ -5,6 +5,19 @@
 
   var cur_video_blob = null;
   var fb_instance;
+  
+  WebFontConfig = {
+    google: { families: [ 'Amatic+SC::latin' ] }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
 
   $(document).ready(function(){
     connect_to_chat_firebase();
@@ -23,7 +36,7 @@
       fb_chat_room_id = Math.random().toString(36).substring(7);
     }
     
-    $("#share_url").append("Share this url with your friend to join this chat: "+ document.location.origin+"/#"+fb_chat_room_id);
+    $("#share_url").append("Share this url with a friend to join chat: "+ document.location.origin+"/#"+fb_chat_room_id);
     //share_url({m:"Share this url with your friend to join this chat: "+ document.location.origin+"/#"+fb_chat_room_id,c:"red"})
    //display_msg({m:"Share this url with your friend to join this chat: "+ document.location.origin+"/#"+fb_chat_room_id,c:"red"})
 
@@ -36,7 +49,7 @@
     // listen to events
     fb_instance_users.on("child_added",function(snapshot){
       
-      //alert(snapshot.val().name+ "..."+username);
+      
        if (snapshot.val().name != username) {
        	 $("#partner").empty().append(snapshot.val().name);
        	 display_partner_msg({m:snapshot.val().name+" joined the room",c: snapshot.val().c});
@@ -46,6 +59,7 @@
  
       if (snapshot.val().name == username) { // if user's own message sent, display in own bubble
         display_own_msg(snapshot.val());
+        //relay_emotion(snapshot.val());
       } else { 
         // if partner's message, display in partner speech bubble
        	// also upon partner's message, user immediately sends a video reaction blob to partner
@@ -61,8 +75,11 @@
     }
     fb_instance_users.push({ name: username,c: my_color});
     $("#waiting").remove();
-    $("#username").append(username);
-
+    if(username.slice(-1)=="/") {
+    	$("#username").append(username.slice(0,-1));
+    } else {
+      $("#username").append(username);
+    }
     // bind submission box
     $("#submission input").keydown(function( event ) {
       if (event.which == 13) {
@@ -120,7 +137,35 @@
   // VIDEO ELEMENT
   function relay_emotion(data) {
       // wait 4 seconds for user to process partner's message, then send reaction video
-      setTimeout(function(){
+   //    setTimeout(function(){
+// 		if(data.v){
+// 		  // for video element
+// 		  var video = document.createElement("video");
+// 		  video.autoplay = true;
+// 		  video.controls = false; // optional
+// 		  video.loop = false;
+// 		  video.width = 400;
+// 	
+// 		  var source = document.createElement("source");
+// 		  source.src =  URL.createObjectURL(base64_to_blob(data.v));
+// 		  source.type =  "video/webm";
+// 	
+// 		  video.appendChild(source);
+// 	      var video_container = document.createElement("div");
+// 	      video_container.className = "webcam_mask";
+// 	      video_container.appendChild(video);
+// 		  document.getElementById("partner_head").replaceChild(video_container,document.getElementById("partner_head").children[0]);
+// 		}
+// 			
+// 		
+// 		
+//       },4000);
+//       
+//       	 // after 3 second video is done, revert to default face
+// 		  setTimeout(function(){
+// 			 document.getElementById("partner_head").innerHTML = '<img src="images/filler_girl.png"/>';
+// 		  },10000);
+        
 		if(data.v){
 		  // for video element
 		  var video = document.createElement("video");
@@ -139,17 +184,10 @@
 	      video_container.appendChild(video);
 		  document.getElementById("partner_head").replaceChild(video_container,document.getElementById("partner_head").children[0]);
 		}
-			
-		
-		
-      },4000);
-      
       	 // after 3 second video is done, revert to default face
 		  setTimeout(function(){
-			alert("OK!");
-			$("partner_head").empty().append('<img src="images/filler_girl.png"/>');
-		  },3000);
-     
+			 document.getElementById("partner_head").innerHTML = '<img src="images/filler_girl.png"/>';
+		  },4000);
   }
 
 
@@ -160,15 +198,18 @@
       video: true,
       audio: false
     };
-
+    // <div id="webcam_stream" class="webcam_mask">
+    
     // callback for when we get video stream from user.
     var onMediaSuccess = function(stream) {
       // create video element, attach webcam stream to video element
       var video_width= 400;
       var video_height= 400;
-      var webcam_stream = document.getElementById('webcam_stream');
+      //var webcam_stream = document.getElementById('webcam_stream');
       var video = document.createElement('video');
-      webcam_stream.innerHTML = "";
+      //webcam_stream.innerHTML = "";
+      
+
       // adds these properties to the video
       video = mergeProps(video, {
           controls: false,
@@ -176,9 +217,15 @@
           height: video_height,
           src: URL.createObjectURL(stream)
       });
-      video.play();
-      webcam_stream.appendChild(video);
-
+      
+      //webcam_stream.appendChild(video);
+      	var video_container = document.createElement("div");
+	      video_container.className = "webcam_mask";
+	      video_container.appendChild(video);
+	      video.play();
+		  document.getElementById("user_head").replaceChild(video_container,document.getElementById("user_head").children[0]);
+		  
+		  
       // counter
       var time = 0;
       var second_counter = document.getElementById('second_counter');
@@ -208,8 +255,8 @@
       };
       setInterval( function() {
         mediaRecorder.stop();
-        mediaRecorder.start(3000);
-      }, 3000 );
+        mediaRecorder.start(4000);
+      }, 4000 );
       console.log("connect to media stream!");
     }
 
@@ -224,7 +271,9 @@
 
   // check to see if a message qualifies to be replaced with video.
   var has_emotions = function(msg){
-    var options = ["lol",":)",":("];
+    var options = [':)', ':(', '=)', '=(', '=]', '=[', ':[', ':]', ':-[',':-]', ':P', ':D' 
+        ,':-)', ':-(', ':-P', ':-D' , 'hahah', '=P',  '=D', 'D=', 'xD', 'XD', 'DX', 'Dx', 'D:',
+    	'^_^', ';)', ':3', ':*', '<3' , 'lol', 'lmao', 'haha',';-)',':-3','</3','hehe'];
     for(var i=0;i<options.length;i++){
       if(msg.indexOf(options[i])!= -1){
         return true;
