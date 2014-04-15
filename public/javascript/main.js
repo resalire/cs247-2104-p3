@@ -5,6 +5,7 @@
 
   var cur_video_blob = null;
   var fb_instance;
+  var local_stream;
 
   $(document).ready(function(){
     connect_to_chat_firebase();
@@ -14,6 +15,8 @@
   function connect_to_chat_firebase(){
     /* Include your Firebase link here!*/
     fb_instance = new Firebase("https://emcheng-cs247-p3.firebaseio.com");
+
+    display_msg({m:"Welcome to Chatterbox, enable camera to post video emoji!",c:"black"});
 
     // generate new chatroom id or use existing id
     var url_segments = document.location.href.split("/#");
@@ -50,6 +53,8 @@
     $("#submission input").keydown(function( event ) {
       if (event.which == 13) {
         if(has_emotions($(this).val())){
+          record_emotion();
+          console.log(cur_video_blob);
           fb_instance_stream.push({m:username+": " +$(this).val(), v:cur_video_blob, c: my_color});
         }else{
           fb_instance_stream.push({m:username+": " +$(this).val(), c: my_color});
@@ -61,6 +66,48 @@
 
     // scroll to bottom in case there is already content
     scroll_to_bottom(1300);
+  }
+
+  function record_emotion() {
+    setup_webcam_stream(local_stream);
+    var webcam_stream = document.getElementById('webcam_stream');
+    var video = webcam_stream.firstElementChild;
+    video.play();
+    var time = 1;
+    var second_counter_update = setInterval(
+      function(){
+        second_counter.innerHTML = time++;
+        if (time >= 4) {
+          webcam_stream.innerHTML = "";
+          second_counter.innerHTML = null;
+          clearInterval(second_counter_update);
+        }
+      },1000);
+
+    // now record stream in 5 seconds interval
+    var video_container = document.getElementById('video_container');
+    var mediaRecorder = new MediaStreamRecorder(local_stream);
+
+    mediaRecorder.mimeType = 'video/webm';
+    // mediaRecorder.mimeType = 'image/gif';
+    // make recorded media smaller to save some traffic (80 * 60 pixels, 3*24 frames)
+    //mediaRecorder.video_width = video_width/2;
+    //mediaRecorder.video_height = video_height/2;
+
+    mediaRecorder.ondataavailable = function (blob) {
+        console.log("new data available!");
+        video_container.innerHTML = "";
+
+        // convert data into base 64 blocks
+        blob_to_base64(blob,function(b64_data){
+          console.log('setting blob');
+          cur_video_blob = b64_data;
+          console.log(cur_video_blob);
+        });
+    };
+    //console.log("connect to media stream!");
+    mediaRecorder.start(3000);
+    mediaRecorder.stop();
   }
 
   // creates a message node and appends it to the conversation
@@ -104,54 +151,7 @@
 
     // callback for when we get video stream from user.
     var onMediaSuccess = function(stream) {
-      // create video element, attach webcam stream to video element
-      var video_width= 160;
-      var video_height= 120;
-      var webcam_stream = document.getElementById('webcam_stream');
-      var video = document.createElement('video');
-      webcam_stream.innerHTML = "";
-      // adds these properties to the video
-      video = mergeProps(video, {
-          controls: false,
-          width: video_width,
-          height: video_height,
-          src: URL.createObjectURL(stream)
-      });
-      video.play();
-      webcam_stream.appendChild(video);
-
-      // counter
-      var time = 0;
-      var second_counter = document.getElementById('second_counter');
-      var second_counter_update = setInterval(function(){
-        second_counter.innerHTML = time++;
-      },1000);
-
-      // now record stream in 5 seconds interval
-      var video_container = document.getElementById('video_container');
-      var mediaRecorder = new MediaStreamRecorder(stream);
-      var index = 1;
-
-      mediaRecorder.mimeType = 'video/webm';
-      // mediaRecorder.mimeType = 'image/gif';
-      // make recorded media smaller to save some traffic (80 * 60 pixels, 3*24 frames)
-      mediaRecorder.video_width = video_width/2;
-      mediaRecorder.video_height = video_height/2;
-
-      mediaRecorder.ondataavailable = function (blob) {
-          //console.log("new data available!");
-          video_container.innerHTML = "";
-
-          // convert data into base 64 blocks
-          blob_to_base64(blob,function(b64_data){
-            cur_video_blob = b64_data;
-          });
-      };
-      setInterval( function() {
-        mediaRecorder.stop();
-        mediaRecorder.start(3000);
-      }, 3000 );
-      console.log("connect to media stream!");
+      setup_webcam_stream(stream);
     }
 
     // callback if there is an error when we try and get the video stream
@@ -163,6 +163,26 @@
     navigator.getUserMedia(mediaConstraints, onMediaSuccess, onMediaError);
   }
 
+  function setup_webcam_stream(stream) {
+    // create video element, attach webcam stream to video element
+    var video_width = 360;
+    var video_height = 270;
+    var webcam_stream = document.getElementById('webcam_stream');
+    var video = document.createElement('video');
+    webcam_stream.innerHTML = "";
+    // adds these properties to the video
+    video = mergeProps(video, {
+        controls: false,
+        width: video_width,
+        height: video_height,
+        src: URL.createObjectURL(stream)
+    });
+    //video.play();
+    webcam_stream.appendChild(video);
+    local_stream = stream;
+  }
+
+
   // check to see if a message qualifies to be replaced with video.
   var has_emotions = function(msg){
     var options = ["lol",":)",":("];
@@ -173,7 +193,6 @@
     }
     return false;
   }
-
 
   // some handy methods for converting blob to base 64 and vice versa
   // for performance bench mark, please refer to http://jsperf.com/blob-base64-conversion/5

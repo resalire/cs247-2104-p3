@@ -1,11 +1,16 @@
-  <div>Welcome to {{title}}, enable camera to post video emoji!</div>
+<!doctype html>
   <div id="waiting">Connecting to chat server...</div>
-  <div id="second_counter"></div>
-  <div id="conversation"></div>
-  <div id="submission">
-    <input type="text" placeholder="say something..">
+  <div id="conversation">
+    <div id="submission">
+      <input type="text" placeholder="say something..">
+    </div>
   </div>
-  <div id="webcam_stream"></div>
-  <div id="video_container"></div>
-
+  <div id="video_panel">
+    <h1 id="video_panel_header"> Emoticon Video Editor </h1>
+    <div id="second_counter"></div>
+    <div id="webcam_stream"></div>
+    <div id="video_container"></div>
+  </div>
+    
+  <script> var username = "{{username}}"; </script>
   <script src='javascript/main.js'></script>
