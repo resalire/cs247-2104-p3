@@ -37,8 +37,6 @@
     }
     
     $("#share_url").append("Share this url with a friend to join chat: "+ document.location.origin+"/#"+fb_chat_room_id);
-    //share_url({m:"Share this url with your friend to join this chat: "+ document.location.origin+"/#"+fb_chat_room_id,c:"red"})
-   //display_msg({m:"Share this url with your friend to join this chat: "+ document.location.origin+"/#"+fb_chat_room_id,c:"red"})
 
     // set up variables to access firebase data structure
     var fb_new_chat_room = fb_instance.child('chatrooms').child(fb_chat_room_id);
@@ -96,76 +94,14 @@
   // creates a message node and appends it to the conversation
   function display_own_msg(data){
     $("#msg_sent").empty().append(data.m);
-//     if(data.v){
-//       // for video element
-//       var video = document.createElement("video");
-//       video.autoplay = true;
-//       video.controls = false; // optional
-//       video.loop = true;
-//       video.width = 120;
-// 
-//       var source = document.createElement("source");
-//       source.src =  URL.createObjectURL(base64_to_blob(data.v));
-//       source.type =  "video/webm";
-// 
-//       video.appendChild(source);
-// 
-//       document.getElementById("conversation").appendChild(video);
-//     }
   }
 
   function display_partner_msg(data){
     $("#msg_received").empty().append(data.m);
-//     if(data.v){
-//       // for video element
-//       var video = document.createElement("video");
-//       video.autoplay = true;
-//       video.controls = false; // optional
-//       video.loop = true;
-//       video.width = 120;
-// 
-//       var source = document.createElement("source");
-//       source.src =  URL.createObjectURL(base64_to_blob(data.v));
-//       source.type =  "video/webm";
-// 
-//       video.appendChild(source);
-// 
-//       document.getElementById("conversation").appendChild(video);
-//     }
   }
   
   // VIDEO ELEMENT
   function relay_emotion(data) {
-      // wait 4 seconds for user to process partner's message, then send reaction video
-   //    setTimeout(function(){
-// 		if(data.v){
-// 		  // for video element
-// 		  var video = document.createElement("video");
-// 		  video.autoplay = true;
-// 		  video.controls = false; // optional
-// 		  video.loop = false;
-// 		  video.width = 400;
-// 	
-// 		  var source = document.createElement("source");
-// 		  source.src =  URL.createObjectURL(base64_to_blob(data.v));
-// 		  source.type =  "video/webm";
-// 	
-// 		  video.appendChild(source);
-// 	      var video_container = document.createElement("div");
-// 	      video_container.className = "webcam_mask";
-// 	      video_container.appendChild(video);
-// 		  document.getElementById("partner_head").replaceChild(video_container,document.getElementById("partner_head").children[0]);
-// 		}
-// 			
-// 		
-// 		
-//       },4000);
-//       
-//       	 // after 3 second video is done, revert to default face
-// 		  setTimeout(function(){
-// 			 document.getElementById("partner_head").innerHTML = '<img src="images/filler_girl.png"/>';
-// 		  },10000);
-        
 		if(data.v){
 		  // for video element
 		  var video = document.createElement("video");
@@ -191,7 +127,6 @@
   }
 
 
-
   function connect_webcam(){
     // we're only recording video, not audio
     var mediaConstraints = {
@@ -207,8 +142,6 @@
       var video_height= 400;
       //var webcam_stream = document.getElementById('webcam_stream');
       var video = document.createElement('video');
-      //webcam_stream.innerHTML = "";
-      
 
       // adds these properties to the video
       video = mergeProps(video, {
@@ -281,7 +214,6 @@
     }
     return false;
   }
-
 
   // some handy methods for converting blob to base 64 and vice versa
   // for performance bench mark, please refer to http://jsperf.com/blob-base64-conversion/5
