@@ -25,7 +25,7 @@
     
     $("#share_url").append("Share this url with your friend to join this chat: "+ document.location.origin+"/#"+fb_chat_room_id);
     //share_url({m:"Share this url with your friend to join this chat: "+ document.location.origin+"/#"+fb_chat_room_id,c:"red"})
-   display_msg({m:"Share this url with your friend to join this chat: "+ document.location.origin+"/#"+fb_chat_room_id,c:"red"})
+   //display_msg({m:"Share this url with your friend to join this chat: "+ document.location.origin+"/#"+fb_chat_room_id,c:"red"})
 
     // set up variables to access firebase data structure
     var fb_new_chat_room = fb_instance.child('chatrooms').child(fb_chat_room_id);
@@ -35,12 +35,20 @@
 
     // listen to events
     fb_instance_users.on("child_added",function(snapshot){
-      display_msg({m:snapshot.val().name+" joined the room",c: snapshot.val().c});
-       $("#partner").empty().append(snapshot.val().name);
+      
+      //alert(snapshot.val().name+ "..."+username);
+       if (snapshot.val().name != username) {
+       	 $("#partner").empty().append(snapshot.val().name);
+       	 display_partner_msg({m:snapshot.val().name+" joined the room",c: snapshot.val().c});
+       }
     });
     fb_instance_stream.on("child_added",function(snapshot){
-      display_msg(snapshot.val());
-       $("#msg_received").empty().append(snapshot.val());
+ 
+      if (snapshot.val().name == username) { // if user's own message sent, display in own bubble
+        display_own_msg(snapshot.val());
+      } else { // if partner's message, display in partner speech bubble
+       	display_partner_msg(snapshot.val());
+      }
     });
 
     // block until username is answered
@@ -56,9 +64,9 @@
     $("#submission input").keydown(function( event ) {
       if (event.which == 13) {
         if(has_emotions($(this).val())){
-          fb_instance_stream.push({m:$(this).val(), v:cur_video_blob, c: my_color});
+          fb_instance_stream.push({m:$(this).val(), v:cur_video_blob, c: my_color, name:username});
         }else{
-          fb_instance_stream.push({m:$(this).val(), c: my_color});
+          fb_instance_stream.push({m:$(this).val(), c: my_color, name:username});
         }
         $(this).val("");
       }
@@ -70,7 +78,7 @@
   }
   
   // creates a message node and appends it to the conversation
-  function display_msg(data){
+  function display_own_msg(data){
     $("#msg_sent").empty().append(data.m);
     if(data.v){
       // for video element
@@ -96,6 +104,32 @@
     //scroll_to_bottom(0);
   }
 
+  function display_partner_msg(data){
+    $("#msg_received").empty().append(data.m);
+    if(data.v){
+      // for video element
+      var video = document.createElement("video");
+      video.autoplay = true;
+      video.controls = false; // optional
+      video.loop = true;
+      video.width = 120;
+
+      var source = document.createElement("source");
+      source.src =  URL.createObjectURL(base64_to_blob(data.v));
+      source.type =  "video/webm";
+
+      video.appendChild(source);
+
+      // for gif instead, use this code below and change mediaRecorder.mimeType in onMediaSuccess below
+      // var video = document.createElement("img");
+      // video.src = URL.createObjectURL(base64_to_blob(data.v));
+
+      document.getElementById("conversation").appendChild(video);
+    }
+    // Scroll to the bottom every time we display a new message
+    //scroll_to_bottom(0);
+  }
+  
   function scroll_to_bottom(wait_time){
     // scroll to bottom of div
     setTimeout(function(){
