@@ -2,62 +2,118 @@ body {
   margin: 10px;
   font: 15px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
-
 a {
   color: #00B7FF;
 }
 
-#webcam_stream{
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  padding: 0;
-  clip-path: circle(20px, 20px, 20px);
-  video{
-    border: 2px solid #dcc;
+img {
+  width:400px; 
+ -webkit-clip-path: ellipse(50%,50%, 30%,30%);
+ -moz-clip-path:  ellipse(50%,50%, 30%,30%);
+ -ms-clip-path:  ellipse(50%,50%, 30%,30%);
+ clip-path: ellipse(50%,50%, 30%,30%);
   }
+    
+#webcam_stream {
+  display: inline;
+  padding: 0;
+
 }
 
-#second_counter{
+table { 
+width: 100%;
+height: 100%;
+table-layout:fixed; 
+margin: 0px auto;
+}
+
+td {
+  overflow: hidden;
+  width: 100px;
+  text-align: center;
+    
+}
+
+#msg_received, #msg_sent {
+  overflow: scroll;
+  height:280px;
+  background-color: #ff0000;
+  text-align: center;
+  margin: 60px 60px 120px 60px;
+  
+}
+
+td.speech_bubble
+{
+  width:400px;
+  height:300px;
+  padding-bottom:30px;
+  background-image:url('../images/speech_bubble.png');
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+td.speech_bubble_flip
+{
+  width:400px;
+  height:300px;
+  padding-bottom:30px;
+  background-image:url('../images/speech_bubble_flip.png');
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+td.talking_head 
+{
+  margin: 0;
+  padding: 0;
+  height:300px;
+}
+
+#webcam_stream video, .webcam_mask video {
+  width:500px; 
+ -webkit-clip-path: ellipse(50%,50%, 20%,30%);
+ -moz-clip-path:  ellipse(50%,50%, 20%,30%);
+ -ms-clip-path:  ellipse(50%,50%, 20%,30%);
+ clip-path: ellipse(50%,50%, 20%,30%);
+}
+
+#second_counter {
   position: fixed;
   top: 20px;
   right: 20px;
   color: white;
   z-index: 999;
 }
-
-#conversation{
+#conversation {
   padding: 10px 10px 80px;
   overflow-y: scroll;
   height: 100%;
 }
-
-#submission{
+#submission {
   position: fixed;
   bottom: 0;
   width: 100%;
   right: 0;
   border-top: 2px solid #dcc;
   background: #fff;
-
-  input{
-    border: none;
-    font-size: 15px;
-    padding: 15px;
-    outline: none;
-    box-sizing: border-box;
-    width: 100%;
-  }
 }
-
-#waiting{
-  position:fixed;
-  height:100%;
-  width:100%;
+#submission input {
+  border: none;
+  font-size: 15px;
+  padding: 15px;
+  outline: none;
+  box-sizing: border-box;
+  width: 100%;
+}
+#waiting {
+  position: fixed;
+  height: 100%;
+  width: 100%;
   top: 0;
   left: 0;
   background: #292929;
-  color:white;
+  color: white;
   text-align: center;
   padding: 50px 0;
 }
